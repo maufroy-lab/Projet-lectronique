@@ -1,118 +1,119 @@
-💻 Firmware ESP32
-Présentation
+# 💻 Firmware — ESP32
 
-Ce dossier contient le firmware développé pour le microcontrôleur ESP32 de la carte électronique.
+## Présentation
 
-Le firmware a pour objectif de permettre la mise en service, le diagnostic et la validation des différentes fonctions matérielles de la carte.
+Cette branche contient le **firmware embarqué** destiné à l'ESP32 de la carte électronique.
 
-Il est organisé en plusieurs modules afin de séparer les différentes fonctions du système :
+Le firmware est principalement développé comme **logiciel de mise en service, de diagnostic et de validation du matériel**.
 
-    configuration générale ;
-    gestion des GPIO ;
-    acquisition analogique ;
-    communication UART ;
-    programme principal.
+---
 
-Architecture logicielle
+## 🧠 Architecture logicielle
 
-                    ┌──────────────────┐
-                    │     main.cpp     │
-                    │ Programme        │
-                    │ principal        │
-                    └────────┬─────────┘
-                             │
-              ┌──────────────┼──────────────┐
-              ▼              ▼              ▼
-       ┌─────────────┐ ┌─────────────┐ ┌─────────────┐
-       │   gpio.cpp  │ │   adc.cpp   │ │  uart.cpp   │
-       │             │ │             │ │             │
-       │ Entrées /   │ │ Acquisition │ │ Diagnostic  │
-       │ sorties     │ │ analogique  │ │ / console   │
-       └─────────────┘ └─────────────┘ └─────────────┘
+```text
+                         main.cpp
+                            │
+              ┌─────────────┼─────────────┐
+              ▼             ▼             ▼
+           GPIO            ADC           UART
+              │             │             │
+              ▼             ▼             ▼
+          Entrées /      Mesures       Diagnostic
+           sorties      analogiques    / console
+```
 
-Fonctions prévues
-GPIO
+---
 
-Le module GPIO permet de :
+## 📁 Organisation
 
-    configurer les broches ;
-    commander les sorties numériques ;
-    lire les entrées numériques ;
-    réaliser des tests fonctionnels de la carte.
+```text
+firmware/
+├── README.md
+├── platformio.ini
+└── src/
+    ├── main.cpp
+    ├── config.h
+    ├── gpio.cpp
+    ├── gpio.h
+    ├── adc.cpp
+    ├── adc.h
+    ├── uart.cpp
+    └── uart.h
+```
 
-ADC
+---
 
-Le module ADC permet de :
+## ⚙️ Fonctions
 
-    lire une tension analogique ;
-    convertir la valeur ADC en valeur exploitable par le programme ;
-    afficher les mesures via UART ;
-    vérifier le fonctionnement de l'entrée analogique.
+### GPIO
 
-UART
+* configuration des broches ;
+* lecture des entrées ;
+* commande des sorties ;
+* tests matériels.
 
-La liaison UART est utilisée pour :
+### ADC
 
-    afficher les informations de diagnostic ;
-    afficher les mesures ;
-    signaler les erreurs éventuelles ;
-    faciliter le développement et le débogage.
+* acquisition analogique ;
+* lecture des valeurs ADC ;
+* conversion en tension ;
+* transmission des mesures via UART.
 
-Séquence de démarrage
+### UART
 
-Au démarrage de l'ESP32 :
+* messages de diagnostic ;
+* affichage des mesures ;
+* aide au débogage.
 
-Démarrage
-   │
-   ▼
-Initialisation UART
-   │
-   ▼
-Configuration GPIO
-   │
-   ▼
-Initialisation ADC
-   │
-   ▼
-Message de diagnostic
-   │
-   ▼
-Boucle principale
-   │
-   ├── Lecture des entrées
-   ├── Acquisition analogique
-   ├── Commande des sorties
-   └── Transmission des informations UART
+---
 
-Tests logiciels
+## 🛠️ Environnement
 
-Le firmware est également utilisé comme outil de validation du matériel.
+| Élément         | Technologie |
+| --------------- | ----------- |
+| Microcontrôleur | ESP32       |
+| Langage         | C/C++       |
+| Framework       | Arduino     |
+| Build system    | PlatformIO  |
+| Communication   | UART        |
 
-Les fonctions développées permettent notamment de vérifier :
-Fonction 	Méthode
-Alimentation 	Lecture et mesure externe
-GPIO 	Activation/désactivation des sorties
-ADC 	Lecture d'une tension connue
-UART 	Communication avec le PC
-Fonctionnement global 	Exécution du programme de test
-Environnement de développement
+---
 
-Le firmware peut être compilé et téléversé avec :
+## ▶️ Compilation
 
-    PlatformIO
-    Arduino framework
-    ESP32
-    langage C/C++
+Installer **PlatformIO**, puis compiler et téléverser le projet sur l'ESP32.
 
-La configuration du projet est disponible dans platformio.ini.
-État du firmware
+La configuration de la cible et du moniteur série se trouve dans :
 
-    Initialisation ESP32
-    Configuration GPIO
-    Lecture des entrées
-    Configuration ADC
-    Acquisition analogique
-    Communication UART
-    Programme de test matériel
-    Gestion des erreurs
-    Validation sur prototype
+```text
+platformio.ini
+```
+
+Configuration série actuelle :
+
+```text
+115200 bauds — 8N1
+```
+
+---
+
+## ⚠️ Configuration matérielle
+
+Les numéros de GPIO et les paramètres ADC doivent correspondre au **schéma électronique validé**.
+
+Les constantes de configuration sont centralisées dans :
+
+```text
+src/config.h
+```
+
+---
+
+## 📈 État
+
+* [ ] Configuration GPIO
+* [ ] ADC
+* [ ] UART
+* [ ] Tests matériels
+* [ ] Gestion des erreurs
+* [ ] Validation sur prototype
